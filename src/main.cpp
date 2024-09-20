@@ -23,8 +23,8 @@ std::string getCurrentPath() {
 #include <cstdlib>
 
 // Function to split the input into command and arguments
-std::vector<char*> parseInput(std::string& input) {
-    std::vector<char*> args;
+vector<char*> parseInput(string& input) {
+    vector<char*> args;
     char* token = strtok(&input[0], " ");
     while (token != nullptr) {
         args.push_back(token);
@@ -35,13 +35,13 @@ std::vector<char*> parseInput(std::string& input) {
 }
 
 // Function to change directories (built-in 'cd' command)
-void changeDirectory(const std::vector<char*>& args) {
+void changeDirectory(const vector<char*>& args) {
     if (args.size() < 2) {
-        std::cerr << "cd: expected argument" << std::endl;
+        cerr << "cd: expected argument" << endl;
     } else {
 #ifdef _WIN32
         if (!SetCurrentDirectory(args[1])) {
-            std::cerr << "cd: could not change directory" << std::endl;
+            cerr << "cd: could not change directory" << endl;
         }
 #else
         if (chdir(args[1]) != 0) {
@@ -53,9 +53,9 @@ void changeDirectory(const std::vector<char*>& args) {
 
 #ifdef _WIN32
 // Function to execute commands on Windows using CreateProcess
-void executeCommand(const std::vector<char*>& args) {
+void executeCommand(const vector<char*>& args) {
     // CreateProcess needs the command and arguments as a single string
-    std::string command;
+    string command;
     for (char* arg : args) {
         if (arg != nullptr) {
             command += arg;
@@ -72,7 +72,7 @@ void executeCommand(const std::vector<char*>& args) {
 
     // Create the process
     if (!CreateProcess(nullptr, &command[0], nullptr, nullptr, false, 0, nullptr, nullptr, &startupInfo, &processInfo)) {
-        std::cerr << "CreateProcess failed (" << GetLastError() << ")." << std::endl;
+        cerr << "CreateProcess failed (" << GetLastError() << ")." << std::endl;
     } else {
         // Wait until the child process exits
         WaitForSingleObject(processInfo.hProcess, INFINITE);
